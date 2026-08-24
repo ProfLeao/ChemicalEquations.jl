@@ -36,6 +36,7 @@ jobs:
       - run: |
           julia --project=docs -e '
             using Pkg
+            Pkg.develop(path=".")
             Pkg.instantiate()
           '
       
