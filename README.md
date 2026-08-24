@@ -20,7 +20,9 @@
 - ✅ **Redox Reactions**: Automatic handling of electrons and ionic charges
 - ✅ **Robust Parsing**: Handles parentheses, hydrates, and state symbols
 - ✅ **Mathematical Precision**: Nullspace-based balancing for exact solutions
-- ✅ **Comprehensive Tests**: 76+ test cases covering edge cases
+- ✅ **LaTeX Export**: Generate `\ce{...}` (mhchem) strings for publications
+- ✅ **Visualization**: Heatmap of the stoichiometric matrix (Plots.jl)
+- ✅ **Comprehensive Tests**: 80+ test cases covering edge cases
 
 ---
 
@@ -139,6 +141,30 @@ balanced = balance(eq)
 println(balanced)  # Output: Na{+} + Cl{-} = NaCl
 ```
 
+### Example 6: LaTeX Export
+
+```julia
+using ChemicalEquations
+
+# Gerar código LaTeX (mhchem) para publicações
+eq = ce"CH4 + O2 = CO2 + H2O"
+println(latex(balance(eq)))
+# Output: \ce{CH4 + 2 O2 -> CO2 + 2 H2O}
+
+println(latex(Compound("H{+}")))
+# Output: \ce{H+}
+```
+
+### Example 7: Visualization
+
+```julia
+using Plots              # DEVE ser carregado antes
+using ChemicalEquations
+
+eq = balance(ce"CH4 + O2 = CO2 + H2O")
+plot_stoichiometry(eq; title="Combustão de Metano")
+```
+
 ---
 
 ## API Reference
@@ -249,8 +275,8 @@ println(mat)
 
 ## Roadmap
 
-- [ ] **Visualization**: Heatmap of stoichiometric matrix (Plots.jl integration)
-- [ ] **LaTeX Export**: Generate `\ce{...}` (mhchem) formatted strings for publications
+- [x] **Visualization**: Heatmap of stoichiometric matrix (Plots.jl integration)
+- [x] **LaTeX Export**: Generate `\ce{...}` (mhchem) formatted strings for publications
 - [ ] **Kinetics**: Integration with reaction rate constants
 - [ ] **Thermodynamics**: ΔH, ΔG calculations
 - [ ] **Catalyst.jl Integration**: Direct compatibility with SciML workflows

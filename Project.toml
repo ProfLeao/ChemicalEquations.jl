@@ -6,7 +6,9 @@ version = "0.2.0"
 [deps]
 DocStringExtensions = "ffbed154-4ef7-542d-bbb7-c09d3a79fcae"
 LinearAlgebraX = "9b3f67b0-2d00-526e-9884-9e4938f8fb88"
+Requires = "ae029012-a4dd-5104-9daa-d747884805df"
 
 [compat]
 DocStringExtensions = "0.9.3"
 LinearAlgebraX = "0.2.10"
+Requires = "1"

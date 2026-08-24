@@ -11,6 +11,7 @@ makedocs(;
     authors="Reginaldo Gonçalves Leão Junior <prof.reginaldo.leao@gmail.com>",
     repo="https://github.com/ProfLeao/ChemicalEquations.jl/blob/{commit}{path}#{line}",
     sitename="ChemicalEquations.jl",
+    checkdocs=:none,  # API é documentada manualmente em api.md
     format=Documenter.HTML(;
         prettyurls=get(ENV, "CI", nothing) == "true",
         canonical="https://profleao.github.io/ChemicalEquations.jl",
@@ -19,6 +20,7 @@ makedocs(;
         "Home" => "index.md",
         "Guide" => "guide.md",
         "Examples" => "examples.md",
+        "LaTeX Export" => "latex.md",
         "API Reference" => "api.md",
     ],
 )

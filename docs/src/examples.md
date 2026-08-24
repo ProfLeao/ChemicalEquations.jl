@@ -1,5 +1,12 @@
 # Practical Examples
 
+```@meta
+CurrentModule = ChemicalEquations
+DocTestSetup  = quote
+    using ChemicalEquations
+end
+```
+
 This page demonstrates practical applications of ChemicalEquations.jl across various chemical domains.
 
 ## Combustion Reactions
@@ -39,7 +46,7 @@ julia> eq = ce"C2H4 + O2 = CO + H2O"
 C2H4 + O2 = CO + H2O
 
 julia> balance(eq)
-C2H4 + 3//2 O2 = 2 CO + 2 H2O
+C2H4 + 2 O2 = 2 CO + 2 H2O
 ```
 
 ## Redox Reactions
@@ -112,10 +119,10 @@ Balancing with multiple charges:
 
 ```jldoctest
 julia> eq = ce"Fe{+3} + OH{-} = Fe(OH)3"
-Fe{+3} + OH{-} = Fe(OH)3
+Fe{+3} + OH{-} = FeO3H3
 
 julia> balance(eq)
-Fe{+3} + 3 OH{-} = Fe(OH)3
+Fe{+3} + 3 OH{-} = FeO3H3
 ```
 
 ## Hydrate Decomposition
@@ -126,10 +133,10 @@ Decomposition of hydrated salt:
 
 ```jldoctest
 julia> eq = ce"CuSO4*5H2O = CuSO4 + H2O"
-CuSO4*5H2O = CuSO4 + H2O
+CuSO9H10 = CuSO4 + H2O
 
 julia> balance(eq)
-CuSO4*5H2O = CuSO4 + 5 H2O
+CuSO9H10 = CuSO4 + 5 H2O
 ```
 
 ### Calcium Hydroxide Hydrate
@@ -138,10 +145,10 @@ Another hydrate example:
 
 ```jldoctest
 julia> eq = ce"Ca(OH)2*8H2O = Ca(OH)2 + H2O"
-CaH2O2 + H2O = CaH2O2 + H2O
+CaO10H18 = CaO2H2 + H2O
 
 julia> balance(eq)
-CaH10O10 = CaH2O2 + 8 H2O
+CaO10H18 = CaO2H2 + 8 H2O
 ```
 
 ## Complex Polyatomic Systems
@@ -152,10 +159,10 @@ Balancing with complex polyatomic ions:
 
 ```jldoctest
 julia> eq = ce"K4Fe(CN)6 + H2SO4 + H2O = K2SO4 + FeSO4 + (NH4)2SO4 + CO"
-K4Fe(CN)6 + H2SO4 + H2O = K2SO4 + FeSO4 + (NH4)2SO4 + CO
+K4FeC6N6 + H2SO4 + H2O = K2SO4 + FeSO4 + N2H8SO4 + CO
 
 julia> balance(eq)
-K4Fe(CN)6 + 6 H2SO4 + 6 H2O = 2 K2SO4 + FeSO4 + 3 (NH4)2SO4 + 6 CO
+K4FeC6N6 + 6 H2SO4 + 6 H2O = 2 K2SO4 + FeSO4 + 3 N2H8SO4 + 6 CO
 ```
 
 ### Benzoic Acid Combustion
@@ -164,10 +171,10 @@ Aromatic compound combustion:
 
 ```jldoctest
 julia> eq = ce"C6H5COOH + O2 = CO2 + H2O"
-C6H5COOH + O2 = CO2 + H2O
+C7H6O2 + O2 = CO2 + H2O
 
 julia> balance(eq)
-2 C6H5COOH + 15 O2 = 14 CO2 + 6 H2O
+2 C7H6O2 + 15 O2 = 14 CO2 + 6 H2O
 ```
 
 ## Using Different Coefficient Types
@@ -181,7 +188,7 @@ julia> eq = ce"H2 + Cl2 = HCl"
 H2 + Cl2 = HCl
 
 julia> balanced = balance(eq, fractions=true)
-H2 + Cl2 = 2 HCl
+1//2 H2 + 1//2 Cl2 = HCl
 ```
 
 ### Float Coefficients
@@ -193,7 +200,7 @@ julia> eq = ChemEquation{Float64}("0.5 N2 + 1.5 H2 = NH3")
 0.5 N2 + 1.5 H2 = NH3
 
 julia> balance(eq)
-0.5 N2 + 1.5 H2 = 1.0 NH3
+0.5 N2 + 1.5 H2 = NH3
 ```
 
 ## Programmatic Access
@@ -240,7 +247,7 @@ CH4 + 2 O2 = CO2 + 2 H2O
 julia> mat = equationmatrix(balanced)
 3×4 Matrix{Int64}:
  1  0  1  0
- 4  0  2  2
+ 4  0  0  2
  0  2  2  1
 ```
 
@@ -253,8 +260,8 @@ Each row represents an element (C, H, O) and each column a compound.
 The parser supports Greek letters and special symbols:
 
 ```jldoctest
-julia> eq = ce"Γ(Θ2Π)5"
-Γ Θ10 Π5
+julia> eq = cc"Γ(Θ2Π)5"
+ΓΘ10Π5
 
 julia> compound = cc"⬡Cl"
 ⬡Cl

@@ -1,5 +1,12 @@
 # API Reference
 
+```@meta
+CurrentModule = ChemicalEquations
+DocTestSetup  = quote
+    using ChemicalEquations
+end
+```
+
 Complete documentation of all public functions and types in ChemicalEquations.jl.
 
 ## Types
@@ -132,7 +139,7 @@ julia> cc"H2O"
 H2O
 
 julia> cc"Ca(OH)2"
-CaH2O2
+CaO2H2
 ```
 
 ---
@@ -229,7 +236,7 @@ julia> balance(eq)
 2 H2 + O2 = 2 H2O
 
 julia> balance(eq, fractions=true)
-1//2 H2 + 1//4 O2 = 1//2 H2O
+H2 + 1//2 O2 = H2O
 ```
 
 ---
@@ -252,10 +259,10 @@ julia> eq = ce"H2 + Cl2 = HCl"
 H2 + Cl2 = HCl
 
 julia> balancematrix(eq)
-3×1 Matrix{Rational{Int64}}:
- 1//1
- 1//1
- -2//1
+3×1 Matrix{Rational{BigInt}}:
+  1
+  1
+ -2
 ```
 
 ---
@@ -342,6 +349,63 @@ false
 
 julia> hascharge(ce"H{+} + OH{-} = H2O")
 true
+```
+
+---
+
+#### latex
+
+```julia
+latex(compound::Compound) -> String
+latex(equation::ChemEquation) -> String
+```
+
+Converts a compound or equation to a LaTeX string in
+[mhchem](https://mhchem.github.io/MathJax-mhchem/) syntax.
+
+**Example (compound):**
+```jldoctest
+julia> latex(Compound("H2O"))
+"\\ce{H2O}"
+
+julia> latex(Compound("Ca{2+}"))
+"\\ce{Ca^{2+}}"
+```
+
+**Example (equation):**
+```jldoctest
+julia> latex(balance(ce"CH4 + O2 = CO2 + H2O"))
+"\\ce{CH4 + 2 O2 -> CO2 + 2 H2O}"
+```
+
+---
+
+## Visualization
+
+!!! note
+    A visualização requer `Plots.jl` carregado *antes* de
+    `ChemicalEquations`:
+    ```julia
+    using Plots
+    using ChemicalEquations
+    ```
+
+### plot_stoichiometry
+
+```julia
+plot_stoichiometry(eq::ChemEquation; title, ylabel, xlabel, kwargs...) -> Plots.Plot
+```
+
+Plots the stoichiometric matrix as a heatmap. Rows are elements,
+columns are compounds, and cell colors represent atom counts.
+
+**Example:**
+```julia
+using Plots
+using ChemicalEquations
+
+eq = balance(ce"CH4 + O2 = CO2 + H2O")
+plot_stoichiometry(eq; title="Combustão de Metano")
 ```
 
 ---

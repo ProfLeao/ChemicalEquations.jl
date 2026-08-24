@@ -1,5 +1,12 @@
 # Getting Started Guide
 
+```@meta
+CurrentModule = ChemicalEquations
+DocTestSetup  = quote
+    using ChemicalEquations
+end
+```
+
 This guide will walk you through the basics of using ChemicalEquations.jl.
 
 ## Installation
@@ -57,7 +64,7 @@ Handle parentheses and coefficients:
 
 ```jldoctest
 julia> calcium_hydroxide = cc"Ca(OH)2"
-CaH2O2
+CaO2H2
 
 julia> magnesium_nitrate = cc"Mg(NO3)2"
 MgN2O6
@@ -118,7 +125,7 @@ julia> eq = ce"Fe + Cl2 = FeCl3"
 Fe + Cl2 = FeCl3
 
 julia> balance(eq, fractions=true)
-2//3 Fe + Cl2 = FeCl3
+Fe + 3//2 Cl2 = FeCl3
 ```
 
 ### Float Coefficients
@@ -181,6 +188,9 @@ julia> compounds(eq)
 Extract unique elements:
 
 ```jldoctest
+julia> eq = ce"H2 + Cl2 = HCl"
+H2 + Cl2 = HCl
+
 julia> elements(eq)
 2-element Vector{String}:
  "H"
@@ -192,6 +202,9 @@ julia> elements(eq)
 Determine if the equation contains charged species:
 
 ```jldoctest
+julia> eq = ce"H2 + Cl2 = HCl"
+H2 + Cl2 = HCl
+
 julia> hascharge(eq)
 false
 
@@ -225,11 +238,14 @@ Each row is an element, each column is a compound.
 The balance matrix is the nullspace of the equation matrix:
 
 ```jldoctest
+julia> eq = ce"H2 + Cl2 = HCl"
+H2 + Cl2 = HCl
+
 julia> balancematrix(eq)
-3×1 Matrix{Rational{Int64}}:
- 1//1
- 1//1
- -2//1
+3×1 Matrix{Rational{BigInt}}:
+  1
+  1
+ -2
 ```
 
 The negative sign indicates a product.
@@ -283,10 +299,10 @@ You can use Greek letters as element names:
 
 ```jldoctest
 julia> compound = cc"Γ(Θ2Π)5"
-Γ Θ10 Π5
+ΓΘ10Π5
 
 julia> ce"Γ + Θ2 = Γ Θ2"
-Γ + Θ2 = Γ Θ2
+Γ + Θ2 = ΓΘ2
 ```
 
 ### Normalization

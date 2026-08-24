@@ -323,13 +323,15 @@ plot_stoichiometry(balanced)  # Heatmap da matriz estequiométrica
 
 **Implementação:**
 ```
-□ Novo arquivo: src/visualization.jl
-□ Função: `plot_stoichiometry(eq::ChemEquation)`
-□ Renderizar matriz estequiométrica como heatmap
-□ Adicionar labels (compostos, elementos)
-□ Exportar função em ChemEquations.jl
-□ Exemplos em examples/visualization.jl
+☑ Novo arquivo: src/visualization.jl
+☑ Função: `plot_stoichiometry(eq::ChemEquation)`
+☑ Renderizar matriz estequiométrica como heatmap
+☑ Adicionar labels (compostos, elementos)
+☑ Exportar função em ChemEquations.jl
+☑ Exemplos em examples/visualization.jl
 ```
+
+**Status:** ✅ COMPLETO (dependência opcional via Requires.jl)
 
 ---
 
@@ -346,14 +348,16 @@ latex(eq)  # "\ce{H2 + Cl2 -> 2 HCl}"
 
 **Implementação:**
 ```
-□ Novo arquivo: src/latex.jl
-□ Funções:
+☑ Novo arquivo: src/latex.jl
+☑ Funções:
   - `latex(compound::Compound)` → "\ce{H2O}"
   - `latex(equation::ChemEquation)` → "\ce{H2 + Cl2 -> 2 HCl}"
-□ Renderizar cargas corretamente: \ce{H{+}} ou H^{+}
-□ Testes em test/latex.jl
-□ Documentação em docs/src/latex.md
+☑ Renderizar cargas corretamente: \ce{H{+}} ou H^{+}
+☑ Testes em test/latex.jl
+☑ Documentação em docs/src/latex.md
 ```
+
+**Status:** ✅ COMPLETO (19 testes passando)
 
 ---
 
@@ -364,12 +368,14 @@ latex(eq)  # "\ce{H2 + Cl2 -> 2 HCl}"
 
 **Passos:**
 ```
-□ Tag versão: git tag v0.1.0
+□ Tag versão: git tag v0.2.0
 □ Push: git push --tags
-□ Abrir PR em github.com/JuliaRegistries/General
+□ Registrar via JuliaRegistrator (comentar /register na PR do branch)
 □ Aguardar review (~24h)
 □ Publicado! Usuários podem fazer Pkg.add("ChemicalEquations")
 ```
+
+**Status:** ⏳ PRONTO PARA REGISTRO (aguardando commit + tag)
 
 ---
 
