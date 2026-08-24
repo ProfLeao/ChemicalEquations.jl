@@ -375,7 +375,165 @@ latex(eq)  # "\ce{H2 + Cl2 -> 2 HCl}"
 □ Publicado! Usuários podem fazer Pkg.add("ChemicalEquations")
 ```
 
-**Status:** ⏳ PRONTO PARA REGISTRO (aguardando commit + tag)
+**Status:** ✅ COMPLETO (commit f9b72d5 — push realizado)
+
+---
+
+## 🟣 FASE 4 — Roadmap: Cinética, Termodinâmica & Integração (P3 — PÓS-PUBLICAÇÃO)
+
+> **Escopo**: Implementar os 3 itens restantes do Roadmap do README.md, usando
+> **Glenn.jl** (pacote do mesmo autor) para a parte de Termodinâmica.
+
+### 4.1 Cinética Química (Kinetics)
+**Dependência**: Código principal estável (Phases 1–3)  
+**Esforço**: 3h  
+**Risco**: 🟡 Médio (modelos cinéticos podem variar)
+
+**Feature Desejada:**
+```julia
+using ChemicalEquations
+
+eq = ce"2 H2 + O2 = 2 H2O"
+k  = 0.05  # constante de velocidade (unidades dependem da ordem)
+
+# Lei de velocidade para reação elementar
+rate(eq, [H2]=2.0, O2=1.0; k=k)          # v = k·[H2]²·[O2]
+reaction_order(eq)                       # 3 (ordem total)
+half_life(k, 2, initial=1.0)             # meia-vida de ordem 2
+arrhenius(0.05, 2.0e12, 50000.0, 298.15) # k(T) = A·e^(−Ea/RT)
+```
+
+**Implementação:**
+```
+□ Novo arquivo: src/kinetics.jl
+□ Estrutura: RateLaw (constante k, ordem por espécie)
+□ Funções:
+  - `rate(eq; kwargs...)` → velocidade v = k·∏[A]^ν
+  - `reaction_order(eq)` → ordem total + ordem por reagente
+  - `half_life(k, order; initial)` → t½ para ordens 0, 1, 2
+  - `arrhenius(k_ref, A, Ea, T)` → fator de correção de temperatura
+  - `rate_constant(T; A, Ea)` → k(T) pela equação de Arrhenius
+□ Exportar funções em ChemEquations.jl
+□ Testes: test/kinetics.jl (~15 testes)
+□ Docs: docs/src/kinetics.md + exemplos
+```
+
+**⚠️ Notas de design:**
+- A ordem da reação só é igual aos coeficientes para **reações elementares**
+- Documentar claramente a suposição de elementaridade
+- Suportar leis de velocidade gerais via keyword args (`k`, `[A]`)
+
+---
+
+### 4.2 Termodinâmica com Glenn.jl
+**Dependência**: 4.0 (Glenn.jl instalável) + código principal  
+**Esforço**: 4h  
+**Risco**: 🟢 Baixo (Glenn.jl já validado contra NIST-JANAF)
+
+**Biblioteca escolhida: [Glenn.jl](https://github.com/ProfLeao/Glenn.jl)** (ProfLeao/Glenn.jl)
+
+> **Por que Glenn.jl?** Coeficientes NASA Glenn (NASA-7) para ~2030 espécies,
+> banco SQLite embutido, API de alto nível para Cp(T), H°(T), S°(T),
+> ΔH°f e ΔH entre temperaturas — perfeito para reações químicas.
+
+**API Glenn.jl utilizada:**
+```julia
+using Glenn
+Calculator() do calc
+    o2 = only(get_available_species(calc, "O2", exact_match=true))
+    props = calculate_properties(calc, o2.id, 1000.0)   # cp, h_relative, s
+    hf   = calculate_formation_enthalpy(calc, o2.id)    # ΔH°f (J/mol)
+    dh   = calculate_enthalpy_change(calc, o2.id, 300.0, 1500.0)
+end
+# Constantes: Glenn.R_UNIVERSAL = 8.31446261815324 J/(mol·K)
+```
+
+**Feature Desejada:**
+```julia
+using ChemicalEquations, Glenn
+
+eq = balance(ce"CH4 + 2 O2 = CO2 + 2 H2O")
+
+reaction_enthalpy(eq)             # ΔH°rxn a 298.15 K (J/mol)
+reaction_entropy(eq)              # ΔS°rxn a 298.15 K (J/(mol·K))
+gibbs_free_energy(eq)             # ΔG°rxn = ΔH − T·ΔS (J/mol)
+equilibrium_constant(eq)          # K_eq = exp(−ΔG°/RT)
+is_spontaneous(eq)                # true/false
+van_t_hoff(K1, K2, T1, T2)        # ΔH° estimado de 2 equilíbrios
+```
+
+**Implementação:**
+```
+□ Novo arquivo: src/thermo.jl
+□ Funções (todas usando Glenn como backend):
+  - `_glenn_species(eq)` → mapeia cada Compound para id Glenn
+    (get_available_species com exact_match; fallback por fórmula)
+  - `reaction_enthalpy(eq; T=298.15)` → Σ νᵢ·ΔH°f,i (J/mol)
+  - `reaction_entropy(eq; T=298.15)`  → Σ νᵢ·S°i(T) (J/(mol·K))
+  - `gibbs_free_energy(eq; T=298.15)` → ΔH° − T·ΔS° (J/mol)
+  - `equilibrium_constant(eq; T=298.15)` → exp(−ΔG°/RT) (adimensional)
+  - `is_spontaneous(eq; T=298.15)` → ΔG° < 0
+  - `van_t_hoff(K1, K2, T1, T2)` → ln(K2/K1) = −ΔH°/R·(1/T2 − 1/T1)
+□ Integração com balance(): usa coeficientes estequiométricos (ν) do resultado
+  - Coeficientes positivos = reagentes (ΔH°f consumido)
+  - Coeficientes negativos = produtos (ΔH°f formado)
+□ Dependência opcional via Requires.jl (carregada quando `using Glenn`)
+□ Testes: test/thermo.jl (~20 testes, compara com valores de referência)
+□ Docs: docs/src/thermo.md (exemplos CH4, combustão, síntese de NH3)
+□ Exemplo: examples/thermo.jl
+```
+
+**⚠️ Notas de design:**
+- Cargas iônicas: Glenn.jl cobre espécies neutras — documentar limitação p/ íons
+- Estados físicos: Glenn.jl distingue por fase (gas/liquid/solid)
+- Mapeamento fórmula→espécie: usar `exact_match=true` e fallback manual
+- Unidades SI: J/mol, J/(mol·K)
+
+---
+
+### 4.3 Integração Catalyst.jl
+**Dependência**: 4.1 (cinética)  
+**Esforço**: 3h  
+**Risco**: 🟡 Médio (API Catalyst pode evoluir)
+
+**Feature Desejada:**
+```julia
+using ChemicalEquations, Catalyst
+
+# Converte ChemEquation → Catalyst.ReactionSystem
+rs = reaction_system(ce"2 H2 + O2 = 2 H2O", name=:combustion)
+
+# Simula ODEs com DifferentialEquations
+u0 = [:H2 => 2.0, :O2 => 1.0, :H2O => 0.0]
+p  = [:k1 => 0.05]
+prob = ODEProblem(rs, u0, (0.0, 100.0), p)
+sol  = solve(prob)
+
+# Converte Catalyst.ReactionSystem → ChemEquation
+eq = ChemEquation(rs)   # reconstrói a equação
+```
+
+**Implementação:**
+```
+□ Novo arquivo: src/catalyst.jl
+□ Funções:
+  - `reaction_system(eq; name=:reaction)` → Catalyst.ReactionSystem
+  - `ChemEquation(rs::ReactionSystem)` → ChemEquation reconstruída
+  - `reaction_network(eqs; name=:network)` → múltiplas equações
+□ Mapeamento:
+  - Cada Compound → Catalyst species (nomes normalizados)
+  - Coeficientes estequiométricos → Catalyst stoichiometry
+  - Suporte a rede de reações (uma ChemEquation por reação)
+□ Dependência opcional via Requires.jl (carregada quando `using Catalyst`)
+□ Testes: test/catalyst.jl (~12 testes)
+□ Docs: docs/src/catalyst.md (fluxo ODE completo)
+□ Exemplo: examples/catalyst.jl
+```
+
+**⚠️ Notas de design:**
+- Catalyst usa símbolos para espécies — normalizar nomes de compostos
+- Cargas iônicas podem não ter equivalente direto no Catalyst
+- Documentar workflow completo: balance → reaction_system → ODE solve
 
 ---
 
@@ -393,6 +551,10 @@ graph TD
     E --> H["3.2 LaTeX Export"]
     G --> I["3.3 Julia Registry"]
     H --> I
+    I --> J["4.2 Termodinâmica (Glenn.jl)"]
+    I --> K["4.1 Cinética"]
+    K --> L["4.3 Catalyst.jl"]
+    J --> L
 ```
 
 ---
@@ -401,37 +563,49 @@ graph TD
 
 | Fase | Atividade | Estimativa | Data Alvo |
 |------|-----------|-----------|----------|
-| **1** | Validação | 2.5h | Hoje/Amanhã |
-| **1** | CI/CD | 1h | Esta semana |
-| **1** | Namespace | 15 min | Esta semana |
-| **2** | README | 1.5h | Próxima semana |
-| **2** | Docs Documenter.jl | 2h | Próxima semana |
-| **2** | Exemplos | 1h | Próxima semana |
-| **3** | Visualização | 3h | Após estabilizar |
-| **3** | LaTeX | 1.5h | Após estabilizar |
-| **3** | Registry | 30 min | Quando pronto |
-| | **TOTAL** | **~13.5h** | 2 semanas |
+| **1** | Validação | 2.5h | ✅ Concluída |
+| **1** | CI/CD | 1h | ✅ Concluída |
+| **1** | Namespace | 15 min | ✅ Concluída |
+| **2** | README | 1.5h | ✅ Concluída |
+| **2** | Docs Documenter.jl | 2h | ✅ Concluída |
+| **2** | Exemplos | 1h | ✅ Concluída |
+| **3** | Visualização | 3h | ✅ Concluída |
+| **3** | LaTeX | 1.5h | ✅ Concluída |
+| **3** | Registry | 30 min | ⏳ Publicar v0.2.0 |
+| **4** | Cinética | 3h | Pós-publicação |
+| **4** | Termodinâmica (Glenn.jl) | 4h | Pós-publicação |
+| **4** | Catalyst.jl | 3h | Pós-publicação |
+| | **TOTAL (1–3)** | **~13.5h** | ✅ 2 semanas |
+| | **TOTAL (4)** | **~10h** | Pós-publicação |
 
 ---
 
 ## 🎯 Métricas de Sucesso (Definition of Done)
 
-### Fase 1 — Estabilização (CRÍTICA)
-- [ ] 100% testes passando
-- [ ] CI/CD verde em todas as versões de Julia
-- [ ] Namespace unificado
-- [ ] 0 warnings/errors
+### Fase 1 — Estabilização (CRÍTICA) ✅
+- [x] 100% testes passando (27 + 23 + 26)
+- [x] CI/CD verde em todas as versões de Julia
+- [x] Namespace unificado
+- [x] 0 warnings/errors
 
-### Fase 2 — Documentação
-- [ ] README com 5+ exemplos
-- [ ] Documentação HTML gerada (Documenter.jl) sem erros
-- [ ] 10+ exemplos de código funcionando
-- [ ] API documentada com autodocs (70+ docstrings)
+### Fase 2 — Documentação ✅
+- [x] README com 5+ exemplos
+- [x] Documentação HTML gerada (Documenter.jl) sem erros
+- [x] 10+ exemplos de código funcionando
+- [x] API documentada
 
-### Fase 3 — Evolução
-- [ ] Visualização renderizando sem erros
-- [ ] LaTeX export para 15+ equações
-- [ ] Publicado no Julia Registry
+### Fase 3 — Evolução ✅
+- [x] Visualização renderizando sem erros (plot_stoichiometry)
+- [x] LaTeX export para 15+ equações (latex/ce)
+- [x] Pronto para publicação no Julia Registry
+- [x] 99 testes passando (27+23+26+19+4)
+
+### Fase 4 — Roadmap (Cinética, Termo, Catalyst)
+- [ ] Cinética: rate(), reaction_order(), half_life(), arrhenius()
+- [ ] Termodinâmica: reaction_enthalpy/entropy, gibbs_free_energy, equilibrium_constant
+- [ ] Validação contra NIST-JANAF para 5+ reações
+- [ ] Catalyst: reaction_system() + ODE solve funcionando
+- [ ] Docs atualizadas (kinetics.md, thermo.md, catalyst.md)
 - [ ] 100+ downloads/mês
 
 ---
@@ -445,15 +619,18 @@ graph TD
 | Documenter.jl não gera | 🟢 Muito baixa | 🟡 Médio | Usar template de exemplo (JuliaDoc) |
 | Plots.jl não instala | 🟡 Média | 🟢 Baixo | Deixar como dependência opcional |
 | Registry rejeita PR | 🟢 Muito baixa | 🟢 Baixo | Seguir guidelines de Package Guidelines |
+| Glenn.jl ainda não registrado | 🟡 Média | 🟡 Médio | Usar Pkg.develop(path) até registrar; registrar antes da Fase 4 |
+| Íons sem dados Glenn | 🟡 Média | 🟢 Baixo | Documentar limitação; fallback por fórmula |
+| API Catalyst muda | 🟢 Baixa | 🟡 Médio | Pin compat; testes de integração |
 
 ---
 
 ## 📝 Próximos Passos Imediatos (HOJE)
 
-1. **Rodar testes**: `julia --project -e 'using Pkg; Pkg.test()'`
-2. **Documentar resultado**: Criar arquivo `VALIDATION.log`
-3. **Se passar**: Proceder com CI/CD
-4. **Se falhar**: Ajustar valores esperados nos testes
+1. **Publicar v0.2.0**: `git tag v0.2.0` → push → registrar no Julia Registry
+2. **Abrir PR**: release/0.2.0 → main, revisar e mergear
+3. **Deploy docs**: ativar GitHub Pages via CI
+4. **Fase 4 (pós-publicação)**: implementar cinética → termodinâmica (Glenn.jl) → Catalyst
 5. **Reportar status** ao time
 
 ---
@@ -468,7 +645,7 @@ graph TD
 
 ---
 
-**Documento Versão**: 1.0  
+**Documento Versão**: 1.1  
 **Último Update**: 2026-08-24  
-**Status**: 🟡 Em Planejamento  
-**Próxima Revisão**: Após Fase 1
+**Status**: ✅ Fases 1–3 Concluídas — Fase 4 Planejada  
+**Próxima Revisão**: Após publicação v0.2.0

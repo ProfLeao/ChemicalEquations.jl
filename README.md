@@ -277,9 +277,11 @@ println(mat)
 
 - [x] **Visualization**: Heatmap of stoichiometric matrix (Plots.jl integration)
 - [x] **LaTeX Export**: Generate `\ce{...}` (mhchem) formatted strings for publications
-- [ ] **Kinetics**: Integration with reaction rate constants
-- [ ] **Thermodynamics**: ΔH, ΔG calculations
-- [ ] **Catalyst.jl Integration**: Direct compatibility with SciML workflows
+- [ ] **Kinetics**: Integration with reaction rate constants (`rate`, `reaction_order`, `half_life`, `arrhenius`)
+- [ ] **Thermodynamics**: ΔH°, ΔS°, ΔG° and equilibrium constants via [**Glenn.jl**](https://github.com/ProfLeao/Glenn.jl) (NASA Glenn coefficients, ~2030 species)
+- [ ] **Catalyst.jl Integration**: Direct compatibility with SciML workflows (`reaction_system` ↔ ODE simulation)
+
+> **Planejamento detalhado**: Consulte a [**FASE 4**](PLANO_IMPLEMENTACAO.md) para o roadmap de Cinética, Termodinâmica (Glenn.jl) e integração com Catalyst.jl.
 
 ---
 
