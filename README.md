@@ -298,6 +298,17 @@ Contributions are welcome! Please:
 
 ---
 
+## Support ☕
+
+If you find **ChemicalEquations.jl** useful and would like to support its
+continued development, consider buying me a coffee — every little bit helps!
+
+[![Buy Me a Coffee](https://img.shields.io/badge/Buy_Me_A_Coffee-ffdd00?logo=buymeacoffee&logoColor=000)](https://www.buymeacoffee.com/reginaldoleao)
+
+Thank you for using the package! 🙏
+
+---
+
 ## References
 
 - **Nullspace Method**: [Thorne (2009) - Balancing Chemical Equations](https://arxiv.org/ftp/arxiv/papers/1110/1110.4321.pdf)
