@@ -37,6 +37,18 @@ balancing chemical equations. It uses a robust mathematical approach based on
 for any chemical reaction — including complex redox reactions, ionic species,
 and multi-phase systems.
 
+> **🙏 A note on the origin of this project**
+>
+> This repository is a **fork** of
+> [**ChemEquations.jl**](https://github.com/zlatanvasovic/ChemEquations.jl)
+> by [Zlatan Vasović](https://github.com/zlatanvasovic), which is currently
+> receiving **active maintenance and improvements** — including new
+> integrations (kinetics, thermochemistry, Catalyst.jl), expanded
+> documentation, and CI/CD.
+>
+> A heartfelt **thank you to the original author** for creating such an
+> elegant and well-designed foundation. 🙏
+
 ### ✨ Key Features
 
 | Feature | Description |
@@ -306,6 +318,7 @@ Thank you for using the package! 🙏
 
 ## References
 
+- **ChemEquations.jl**: [Original package by Zlatan Vasović](https://github.com/zlatanvasovic/ChemEquations.jl)
 - **Nullspace Method**: [Thorne (2009) — Balancing Chemical Equations](https://arxiv.org/ftp/arxiv/papers/1110/1110.4321.pdf)
 - **Glenn.jl**: [NASA Glenn Coefficients for Thermochemistry](https://github.com/ProfLeao/Glenn.jl)
 - **Catalyst.jl**: [SciML Reaction Networks](https://github.com/SciML/Catalyst.jl)
