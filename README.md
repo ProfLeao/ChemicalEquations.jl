@@ -266,12 +266,6 @@ See the [API Reference](https://profleao.github.io/ChemicalEquations.jl/stable/a
 - [x] **Thermochemistry**: ΔH°, ΔS°, ΔG° and K_eq via [Glenn.jl](https://github.com/ProfLeao/Glenn.jl)
 - [x] **Catalyst.jl Integration**: `ReactionSystem` conversion for SciML workflows
 
-### 🚀 Planned
-
-- [ ] **Julia Registry**: Publish to the General registry (`Pkg.add`)
-- [ ] **Extended Thermochemistry**: More species and temperature-dependent ΔH°(T)
-- [ ] **SBML / BioNetGen import**: Load reaction networks from standard formats
-
 ---
 
 ## Contributing
