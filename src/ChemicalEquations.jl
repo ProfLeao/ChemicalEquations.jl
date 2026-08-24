@@ -1,7 +1,7 @@
 """
 Write and balance chemical equations elegantly and efficiently.
 """
-module ChemEquations
+module ChemicalEquations
 
 using LinearAlgebraX: I, nullspacex, IntegerX
 using DocStringExtensions

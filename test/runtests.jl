@@ -1,4 +1,4 @@
-using ChemEquations
+using ChemicalEquations
 using Test
 
 for str in ("compound", "chemequation", "balance")

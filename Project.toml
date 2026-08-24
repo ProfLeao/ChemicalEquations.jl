@@ -1,7 +1,7 @@
 name = "ChemicalEquations"
 uuid = "f49a7eeb-7498-4999-b1d8-e30dc4dd315a"
 authors = ["Reginaldo Gonçalves Leão Junior <prof.reginaldo.leao@gmail.com>"]
-version = "0.1.0"
+version = "0.2.0"
 
 [deps]
 DocStringExtensions = "ffbed154-4ef7-542d-bbb7-c09d3a79fcae"
