@@ -284,8 +284,6 @@ println(mat)
 - [x] **Thermodynamics**: ΔH°, ΔS°, ΔG° and equilibrium constants via [**Glenn.jl**](https://github.com/ProfLeao/Glenn.jl) (NASA Glenn coefficients, ~2030 species)
 - [x] **Catalyst.jl Integration**: Convert equations to `ReactionSystem`s for SciML workflows
 
-> **Planejamento detalhado**: Consulte a [**FASE 4**](PLANO_IMPLEMENTACAO.md) para o roadmap de Cinética, Termodinâmica (Glenn.jl) e integração com Catalyst.jl.
-
 ---
 
 ## Contributing
