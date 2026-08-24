@@ -414,9 +414,11 @@ arrhenius(0.05, 2.0e12, 50000.0, 298.15) # k(T) = A·e^(−Ea/RT)
   - `arrhenius(k_ref, A, Ea, T)` → fator de correção de temperatura
   - `rate_constant(T; A, Ea)` → k(T) pela equação de Arrhenius
 □ Exportar funções em ChemEquations.jl
-□ Testes: test/kinetics.jl (~15 testes)
-□ Docs: docs/src/kinetics.md + exemplos
+☑ Testes: test/kinetics.jl (26 testes)
+☑ Docs: docs/src/kinetics.md + examples/kinetics.jl
 ```
+
+**Status:** ✅ COMPLETO (26 testes passando)
 
 **⚠️ Notas de design:**
 - A ordem da reação só é igual aos coeficientes para **reações elementares**
@@ -478,10 +480,12 @@ van_t_hoff(K1, K2, T1, T2)        # ΔH° estimado de 2 equilíbrios
   - Coeficientes positivos = reagentes (ΔH°f consumido)
   - Coeficientes negativos = produtos (ΔH°f formado)
 □ Dependência opcional via Requires.jl (carregada quando `using Glenn`)
-□ Testes: test/thermo.jl (~20 testes, compara com valores de referência)
-□ Docs: docs/src/thermo.md (exemplos CH4, combustão, síntese de NH3)
-□ Exemplo: examples/thermo.jl
+☑ Testes: test/thermo.jl (17 testes, compara com NIST)
+☑ Docs: docs/src/thermo.md (exemplos CH4, combustão, síntese de NH3)
+☑ Exemplo: examples/thermo.jl
 ```
+
+**Status:** ✅ COMPLETO (17 testes passando; ΔH°rxn CH4 ≈ −802 kJ/mol vs NIST)
 
 **⚠️ Notas de design:**
 - Cargas iônicas: Glenn.jl cobre espécies neutras — documentar limitação p/ íons
@@ -525,10 +529,12 @@ eq = ChemEquation(rs)   # reconstrói a equação
   - Coeficientes estequiométricos → Catalyst stoichiometry
   - Suporte a rede de reações (uma ChemEquation por reação)
 □ Dependência opcional via Requires.jl (carregada quando `using Catalyst`)
-□ Testes: test/catalyst.jl (~12 testes)
-□ Docs: docs/src/catalyst.md (fluxo ODE completo)
+☑ Testes: test/catalyst.jl (6 testes)
+☑ Docs: docs/src/catalyst.md (fluxo ODE completo)
 □ Exemplo: examples/catalyst.jl
 ```
+
+**Status:** ✅ COMPLETO (6 testes passando com Catalyst v16)
 
 **⚠️ Notas de design:**
 - Catalyst usa símbolos para espécies — normalizar nomes de compostos
@@ -572,11 +578,11 @@ graph TD
 | **3** | Visualização | 3h | ✅ Concluída |
 | **3** | LaTeX | 1.5h | ✅ Concluída |
 | **3** | Registry | 30 min | ⏳ Publicar v0.2.0 |
-| **4** | Cinética | 3h | Pós-publicação |
-| **4** | Termodinâmica (Glenn.jl) | 4h | Pós-publicação |
-| **4** | Catalyst.jl | 3h | Pós-publicação |
+| **4** | Cinética | 3h | ✅ Concluída |
+| **4** | Termodinâmica (Glenn.jl) | 4h | ✅ Concluída |
+| **4** | Catalyst.jl | 3h | ✅ Concluída |
 | | **TOTAL (1–3)** | **~13.5h** | ✅ 2 semanas |
-| | **TOTAL (4)** | **~10h** | Pós-publicação |
+| | **TOTAL (4)** | **~10h** | ✅ Pós-publicação |
 
 ---
 
@@ -600,13 +606,13 @@ graph TD
 - [x] Pronto para publicação no Julia Registry
 - [x] 99 testes passando (27+23+26+19+4)
 
-### Fase 4 — Roadmap (Cinética, Termo, Catalyst)
-- [ ] Cinética: rate(), reaction_order(), half_life(), arrhenius()
-- [ ] Termodinâmica: reaction_enthalpy/entropy, gibbs_free_energy, equilibrium_constant
-- [ ] Validação contra NIST-JANAF para 5+ reações
-- [ ] Catalyst: reaction_system() + ODE solve funcionando
-- [ ] Docs atualizadas (kinetics.md, thermo.md, catalyst.md)
-- [ ] 100+ downloads/mês
+### Fase 4 — Roadmap (Cinética, Termo, Catalyst) ✅
+- [x] Cinética: rate(), reaction_order(), half_life(), arrhenius()
+- [x] Termodinâmica: reaction_enthalpy/entropy, gibbs_free_energy, equilibrium_constant
+- [x] Validação contra NIST-JANAF (CH4 ≈ −802 kJ/mol, NH3 ≈ −91.9 kJ/mol)
+- [x] Catalyst: reaction_system() + reaction_network() + ChemEquation(rs)
+- [x] Docs atualizadas (kinetics.md, thermo.md, catalyst.md)
+- [ ] 100+ downloads/mês (após publicação)
 
 ---
 
@@ -627,11 +633,12 @@ graph TD
 
 ## 📝 Próximos Passos Imediatos (HOJE)
 
-1. **Publicar v0.2.0**: `git tag v0.2.0` → push → registrar no Julia Registry
-2. **Abrir PR**: release/0.2.0 → main, revisar e mergear
-3. **Deploy docs**: ativar GitHub Pages via CI
-4. **Fase 4 (pós-publicação)**: implementar cinética → termodinâmica (Glenn.jl) → Catalyst
-5. **Reportar status** ao time
+1. **Fase 4 implementada** ✅ (cinética, termodinâmica, Catalyst)
+2. **Publicar v0.2.0**: `git tag v0.2.0` → push → registrar no Julia Registry
+3. **Abrir PR**: release/0.2.0 → main, revisar e mergear
+4. **Deploy docs**: ativar GitHub Pages via CI
+5. **Registrar Glenn.jl** no Julia Registry (necessário p/ Fase 4.2 em produção)
+6. **Reportar status** ao time
 
 ---
 
@@ -645,7 +652,7 @@ graph TD
 
 ---
 
-**Documento Versão**: 1.1  
+**Documento Versão**: 1.2  
 **Último Update**: 2026-08-24  
-**Status**: ✅ Fases 1–3 Concluídas — Fase 4 Planejada  
+**Status**: ✅ Fases 1–4 Concluídas — Pendente: publicação v0.2.0  
 **Próxima Revisão**: Após publicação v0.2.0

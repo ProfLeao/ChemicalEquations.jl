@@ -410,6 +410,223 @@ plot_stoichiometry(eq; title="Combustão de Metano")
 
 ---
 
+## Chemical Kinetics
+
+### RateLaw
+
+```julia
+struct RateLaw{T<:Real}
+    k::T
+    orders::Dict{String,Int}
+end
+
+RateLaw(k::Real, eq::ChemEquation) -> RateLaw
+```
+
+Stores a rate constant and the reaction order of each reactant.
+
+**Example:**
+```jldoctest
+julia> law = RateLaw(0.05, ce"H2 + O2 = H2O");
+
+julia> law.k
+0.05
+
+julia> law.orders["H2"]
+1
+```
+
+### rate
+
+```julia
+rate(eq::ChemEquation, concentrations::Dict{String,<:Real}; k::Real=1.0) -> Float64
+rate(eq::ChemEquation, concentrations::Pair...; k::Real=1.0) -> Float64
+rate(law::RateLaw, concentrations::Dict{String,<:Real}) -> Float64
+```
+
+Rate of an elementary reaction: `v = k·∏[A]^νᵢ`.
+
+**Example:**
+```jldoctest
+julia> rate(ce"H2 + O2 = H2O", "H2" => 2.0, "O2" => 1.0; k = 0.05)
+0.1
+```
+
+### reaction_order
+
+```julia
+reaction_order(eq::ChemEquation) -> Int
+```
+
+Total reaction order (elementary assumption).
+
+**Example:**
+```jldoctest
+julia> reaction_order(ce"2 NO + O2 = 2 NO2")
+3
+```
+
+### reactant_orders
+
+```julia
+reactant_orders(eq::ChemEquation) -> Dict{String,Int}
+```
+
+Reaction order per reactant, keyed by formula.
+
+**Example:**
+```jldoctest
+julia> orders = reactant_orders(ce"2 NO + O2 = 2 NO2");
+
+julia> orders["NO"]
+2
+
+julia> orders["O2"]
+1
+```
+
+### half_life
+
+```julia
+half_life(k::Real, order::Int; initial::Real=1.0) -> Float64
+```
+
+Half-life for reaction orders 0, 1, 2 and 3.
+
+**Example:**
+```jldoctest
+julia> half_life(0.5, 2, initial = 2.0)
+1.0
+```
+
+### arrhenius / rate_constant
+
+```julia
+arrhenius(A::Real, Ea::Real, T::Real) -> Float64
+rate_constant(T::Real; A::Real, Ea::Real) -> Float64
+```
+
+Arrhenius equation `k(T) = A·exp(−Ea/(R·T))` with `Ea` in J/mol.
+
+**Example:**
+```jldoctest
+julia> arrhenius(2.0e12, 50000.0, 298.15)
+3478.635937472466
+```
+
+---
+
+## Thermochemistry
+
+!!! note
+    A termodinâmica requer `Glenn.jl` carregado *antes* de
+    `ChemicalEquations`:
+    ```julia
+    using Glenn
+    using ChemicalEquations
+    ```
+
+### reaction_enthalpy
+
+```julia
+reaction_enthalpy(eq::ChemEquation) -> Float64
+```
+
+Standard enthalpy of reaction at 298.15 K (J/mol).
+
+**Example:**
+```julia
+reaction_enthalpy(balance(ce"CH4 + O2 = CO2 + H2O"))  # -802562.0
+```
+
+### reaction_entropy
+
+```julia
+reaction_entropy(eq::ChemEquation; T::Real=298.15) -> Float64
+```
+
+Entropy of reaction at temperature `T` (J/(mol·K)).
+
+### gibbs_free_energy
+
+```julia
+gibbs_free_energy(eq::ChemEquation; T::Real=298.15) -> Float64
+```
+
+Gibbs free energy of reaction `ΔG° = ΔH° − T·ΔS°` (J/mol).
+
+### equilibrium_constant
+
+```julia
+equilibrium_constant(eq::ChemEquation; T::Real=298.15) -> Float64
+```
+
+Equilibrium constant `K = exp(−ΔG°/(R·T))`.
+
+**Example:**
+```julia
+equilibrium_constant(balance(ce"N2 + H2 = NH3"))  # ~5.6e5
+```
+
+### is_spontaneous
+
+```julia
+is_spontaneous(eq::ChemEquation; T::Real=298.15) -> Bool
+```
+
+`true` if `ΔG°rxn < 0` at temperature `T`.
+
+### van_t_hoff
+
+```julia
+van_t_hoff(K1::Real, K2::Real, T1::Real, T2::Real) -> Float64
+```
+
+Estimates `ΔH°` (J/mol) from two equilibrium constants at two temperatures.
+
+**Example:**
+```julia
+julia> van_t_hoff(1.0e-3, 5.0e-3, 300.0, 350.0)   # ≈ 28101.38 J/mol
+```
+
+---
+
+## Catalyst Integration
+
+!!! note
+    A integração requer `Catalyst.jl` carregado *antes* de
+    `ChemicalEquations`:
+    ```julia
+    using Catalyst
+    using ChemicalEquations
+    ```
+
+### reaction_system
+
+```julia
+reaction_system(eq::ChemEquation; name::Symbol=:reaction, rate::Symbol=:k) -> Catalyst.ReactionSystem
+```
+
+Converts an equation to a Catalyst `ReactionSystem`.
+
+### reaction_network
+
+```julia
+reaction_network(eqs::AbstractVector{ChemEquation}; name::Symbol=:network, rate::Symbol=:k) -> Catalyst.ReactionSystem
+```
+
+Converts multiple equations to a single Catalyst network.
+
+### ChemEquation(rs)
+
+```julia
+ChemEquation(rs::Catalyst.ReactionSystem) -> ChemEquation
+```
+
+Reconstructs a `ChemEquation` from a Catalyst `ReactionSystem`.
+
+---
+
 ## Constants
 
 ### CHARGEREGEX

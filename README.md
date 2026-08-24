@@ -22,7 +22,10 @@
 - ✅ **Mathematical Precision**: Nullspace-based balancing for exact solutions
 - ✅ **LaTeX Export**: Generate `\ce{...}` (mhchem) strings for publications
 - ✅ **Visualization**: Heatmap of the stoichiometric matrix (Plots.jl)
-- ✅ **Comprehensive Tests**: 80+ test cases covering edge cases
+- ✅ **Chemical Kinetics**: Rate laws, reaction orders, half-lives, Arrhenius
+- ✅ **Thermochemistry**: ΔH°, ΔS°, ΔG° and K_eq via [Glenn.jl](https://github.com/ProfLeao/Glenn.jl)
+- ✅ **Catalyst.jl Integration**: Convert equations to `ReactionSystem`s for SciML
+- ✅ **Comprehensive Tests**: 100+ test cases covering edge cases
 
 ---
 
@@ -277,9 +280,9 @@ println(mat)
 
 - [x] **Visualization**: Heatmap of stoichiometric matrix (Plots.jl integration)
 - [x] **LaTeX Export**: Generate `\ce{...}` (mhchem) formatted strings for publications
-- [ ] **Kinetics**: Integration with reaction rate constants (`rate`, `reaction_order`, `half_life`, `arrhenius`)
-- [ ] **Thermodynamics**: ΔH°, ΔS°, ΔG° and equilibrium constants via [**Glenn.jl**](https://github.com/ProfLeao/Glenn.jl) (NASA Glenn coefficients, ~2030 species)
-- [ ] **Catalyst.jl Integration**: Direct compatibility with SciML workflows (`reaction_system` ↔ ODE simulation)
+- [x] **Kinetics**: Rate laws (`rate`), reaction orders, half-lives, Arrhenius equation
+- [x] **Thermodynamics**: ΔH°, ΔS°, ΔG° and equilibrium constants via [**Glenn.jl**](https://github.com/ProfLeao/Glenn.jl) (NASA Glenn coefficients, ~2030 species)
+- [x] **Catalyst.jl Integration**: Convert equations to `ReactionSystem`s for SciML workflows
 
 > **Planejamento detalhado**: Consulte a [**FASE 4**](PLANO_IMPLEMENTACAO.md) para o roadmap de Cinética, Termodinâmica (Glenn.jl) e integração com Catalyst.jl.
 

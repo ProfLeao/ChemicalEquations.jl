@@ -21,6 +21,9 @@ makedocs(;
         "Guide" => "guide.md",
         "Examples" => "examples.md",
         "LaTeX Export" => "latex.md",
+        "Chemical Kinetics" => "kinetics.md",
+        "Thermochemistry" => "thermo.md",
+        "Catalyst Integration" => "catalyst.md",
         "API Reference" => "api.md",
     ],
 )
