@@ -20,7 +20,7 @@
 - [Examples](#examples)
 - [Advanced Topics](#advanced-topics)
 - [API Overview](#api-overview)
-- [Roadmap](#roadmap)
+- [Features](#features)
 - [Contributing](#contributing)
 - [Support](#support)
 - [References](#references)
@@ -256,15 +256,28 @@ See the [API Reference](https://profleao.github.io/ChemicalEquations.jl/stable/a
 
 ---
 
-## Roadmap
+## Features
 
-### ✅ Implemented
+### 🧪 Parsing & Balancing
 
-- [x] **Visualization**: Heatmap of the stoichiometric matrix (Plots.jl)
-- [x] **LaTeX Export**: `\ce{...}` (mhchem) strings for publications
-- [x] **Kinetics**: Rate laws, reaction orders, half-lives, Arrhenius equation
-- [x] **Thermochemistry**: ΔH°, ΔS°, ΔG° and K_eq via [Glenn.jl](https://github.com/ProfLeao/Glenn.jl)
-- [x] **Catalyst.jl Integration**: `ReactionSystem` conversion for SciML workflows
+- **String macros** `cc"..."` and `ce"..."` for compounds and equations
+- **Robust parser**: parentheses, hydrates (`CuSO4*5H2O`), and state symbols `(s)`, `(l)`, `(g)`, `(aq)`
+- **Multiple arrow types**: `=`, `→`, `⇌`, `↔`, and more
+- **Unicode elements**: Greek letters (`Γ`, `Θ`) and custom symbols (`⬡`)
+- **Charged species**: `H{+}`, `OH{-}`, `SO4{-2}`, and the electron `e`
+- **Exact balancing** via the nullspace method (integer, rational, or float coefficients)
+
+### ⚡ Chemistry
+
+- **Redox reactions**: automatic electrons and ionic charge balance
+- **Chemical kinetics**: rate laws, reaction orders, half-lives, Arrhenius equation
+- **Thermochemistry**: ΔH°, ΔS°, ΔG° and K_eq via [Glenn.jl](https://github.com/ProfLeao/Glenn.jl)
+
+### 🔌 Integrations
+
+- **Plots.jl**: heatmap of the stoichiometric matrix
+- **Catalyst.jl**: convert equations to `ReactionSystem`s for ODE/SDE/jump simulation
+- **LaTeX (mhchem)**: publish-ready `\ce{...}` strings
 
 ---
 
