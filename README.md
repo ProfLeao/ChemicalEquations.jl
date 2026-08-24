@@ -149,7 +149,7 @@ println(balanced)  # Output: Na{+} + Cl{-} = NaCl
 ```julia
 using ChemicalEquations
 
-# Gerar código LaTeX (mhchem) para publicações
+# Generate LaTeX (mhchem) code for publications
 eq = ce"CH4 + O2 = CO2 + H2O"
 println(latex(balance(eq)))
 # Output: \ce{CH4 + 2 O2 -> CO2 + 2 H2O}
@@ -161,11 +161,11 @@ println(latex(Compound("H{+}")))
 ### Example 7: Visualization
 
 ```julia
-using Plots              # DEVE ser carregado antes
+using Plots              # MUST be loaded first
 using ChemicalEquations
 
 eq = balance(ce"CH4 + O2 = CO2 + H2O")
-plot_stoichiometry(eq; title="Combustão de Metano")
+plot_stoichiometry(eq; title="Methane Combustion")
 ```
 
 ---
@@ -327,5 +327,4 @@ This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md
 
 **Reginaldo Gonçalves Leão Junior** ([prof.reginaldo.leao@gmail.com](mailto:prof.reginaldo.leao@gmail.com))
 
-Department of Chemical Engineering  
 *Expertise in chemical kinetics, combustion, and reaction engineering*

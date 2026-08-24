@@ -5,26 +5,26 @@ and equilibrium constants — using the NASA Glenn coefficients provided by
 [**Glenn.jl**](https://github.com/ProfLeao/Glenn.jl) (same author).
 
 !!! note
-    Carregue `Glenn` **antes** de usar as funções de termodinâmica:
+    Load `Glenn` **before** using the thermochemistry functions:
     ```julia
     using Glenn
     using ChemicalEquations
     ```
 
-## Conceitos
+## Concepts
 
-Para uma reação balanceada com coeficientes estequiométricos νᵢ:
+For a balanced reaction with stoichiometric coefficients νᵢ:
 
-| Grandeza | Fórmula |
+| Quantity | Formula |
 |----------|---------|
-| Entalpia de reação | `ΔH°rxn = Σᵢ νᵢ·ΔH°f,i` |
-| Entropia de reação | `ΔS°rxn = Σᵢ νᵢ·S°ᵢ(T)` |
-| Energia livre de Gibbs | `ΔG°rxn = ΔH°rxn − T·ΔS°rxn` |
-| Constante de equilíbrio | `K = exp(−ΔG°rxn/(R·T))` |
+| Enthalpy of reaction | `ΔH°rxn = Σᵢ νᵢ·ΔH°f,i` |
+| Entropy of reaction | `ΔS°rxn = Σᵢ νᵢ·S°ᵢ(T)` |
+| Gibbs free energy | `ΔG°rxn = ΔH°rxn − T·ΔS°rxn` |
+| Equilibrium constant | `K = exp(−ΔG°rxn/(R·T))` |
 
-Todas as funções retornam valores em **SI**: J/mol e J/(mol·K).
+All functions return values in **SI** units: J/mol and J/(mol·K).
 
-## Combustão do Metano
+## Methane Combustion
 
 ```julia
 using Glenn, ChemicalEquations
@@ -37,9 +37,9 @@ gibbs_free_energy(eq)     # -801004.0 J/mol
 is_spontaneous(eq)        # true
 ```
 
-A combustão do metano é altamente exotérmica e espontânea a 298 K.
+Methane combustion is highly exothermic and spontaneous at 298 K.
 
-## Síntese de Amônia (Haber-Bosch)
+## Ammonia Synthesis (Haber-Bosch)
 
 ```julia
 using Glenn, ChemicalEquations
@@ -52,10 +52,10 @@ equilibrium_constant(eq)  # ~5.6e5
 is_spontaneous(eq)        # true
 ```
 
-## Temperatura
+## Temperature
 
-Por padrão, `T = 298.15 K`. As funções que dependem da temperatura aceitam
-o argumento `T`:
+By default, `T = 298.15 K`. Functions that depend on temperature accept the
+`T` argument:
 
 ```julia
 ΔS = reaction_entropy(eq; T = 500.0)
@@ -64,13 +64,13 @@ K  = equilibrium_constant(eq; T = 500.0)
 ```
 
 !!! info
-    `reaction_enthalpy` usa as entalpias de formação a 298.15 K
-    (convenção padrão de "entalpia de reação").
+    `reaction_enthalpy` uses formation enthalpies at 298.15 K
+    (standard "enthalpy of reaction" convention).
 
 ## van 't Hoff
 
-A equação de van 't Hoff estima `ΔH°` a partir de duas constantes de
-equilíbrio em duas temperaturas:
+The van 't Hoff equation estimates `ΔH°` from two equilibrium constants at
+two temperatures:
 
 $$\ln\frac{K_2}{K_1} = -\frac{\Delta H^\circ}{R}\left(\frac{1}{T_2}-\frac{1}{T_1}\right)$$
 
@@ -79,18 +79,18 @@ julia> van_t_hoff(1.0e-3, 5.0e-3, 300.0, 350.0)
 28101.38
 ```
 
-## Espontaneidade
+## Spontaneity
 
 ```julia
 is_spontaneous(eq)              # ΔG° < 0 ?
-is_spontaneous(eq; T = 800.0)   # em outra temperatura
+is_spontaneous(eq; T = 800.0)   # at another temperature
 ```
 
-## Limitações
+## Limitations
 
-- **Espécies iônicas**: Glenn.jl cobre espécies neutras. Equações com íons
-  (por ex. `Na{+}`, `Cl{-}`) não podem ser processadas.
-- **Estados físicos**: Glenn.jl distingue por fase (gas/condensed). O
-  mapeamento usa o nome da fórmula, priorizando a espécie gasosa.
-- **Cobertura**: ~2030 espécies NASA Glenn. Espécies fora do banco lançam
-  um erro.
+- **Ionic species**: Glenn.jl covers neutral species. Equations with ions
+  (e.g. `Na{+}`, `Cl{-}`) cannot be processed.
+- **Physical states**: Glenn.jl distinguishes by phase (gas/condensed).
+  The mapping uses the formula name, prioritizing the gas species.
+- **Coverage**: ~2030 NASA Glenn species. Species outside the database
+  raise an error.

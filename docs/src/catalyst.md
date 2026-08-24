@@ -6,13 +6,13 @@ opening the door to ODE, SDE, and stochastic jump simulations through the
 SciML ecosystem.
 
 !!! note
-    Carregue `Catalyst` **antes** de usar as funções de integração:
+    Load `Catalyst` **before** using the integration functions:
     ```julia
     using Catalyst
     using ChemicalEquations
     ```
 
-## Convertendo uma Equação
+## Converting an Equation
 
 ```julia
 using Catalyst
@@ -22,18 +22,18 @@ eq = balance(ce"2 H2 + O2 = 2 H2O")
 rs = reaction_system(eq; name = :combustion)
 ```
 
-O resultado é um `Catalyst.ReactionSystem` com uma única reação
-(assumida **direta** e **elementar**):
+The result is a `Catalyst.ReactionSystem` with a single reaction
+(assumed **directed** and **elementary**):
 
 ```
 k, 2 H2 + O2 --> 2 H2O
 ```
 
-## Simulando com ODEs
+## Simulating with ODEs
 
 ```julia
 using Catalyst, ChemicalEquations
-using OrdinaryDiffEqDefault   # ou DifferentialEquations
+using OrdinaryDiffEqDefault   # or DifferentialEquations
 
 rs = reaction_system(balance(ce"2 H2 + O2 = 2 H2O"); name = :combustion)
 
@@ -45,20 +45,20 @@ prob = ODEProblem(rs, u0, tspan, ps)
 sol  = solve(prob)
 ```
 
-## Redes de Reações
+## Reaction Networks
 
-Várias equações podem ser combinadas em uma única rede:
+Multiple equations can be combined into a single network:
 
 ```julia
 using Catalyst, ChemicalEquations
 
-eqs = [balance(ce"A = B"), balance(ce"B = C")]
+eqs = [balance(ce"H2 + Cl2 = HCl"), balance(ce"N2 + H2 = NH3")]
 rn = reaction_network(eqs; name = :chain)
 ```
 
-## Reconversão
+## Reverse Conversion
 
-Um `ReactionSystem` pode ser reconvertido para `ChemEquation`:
+A `ReactionSystem` can be converted back to a `ChemEquation`:
 
 ```julia
 using Catalyst, ChemicalEquations
@@ -68,13 +68,13 @@ eq = ChemEquation(rs)
 ```
 
 !!! warning
-    A reconversão funciona para espécies cujos símbolos são fórmulas
-    químicas válidas. Espécies abstratas do Catalyst (ex.: `SE`) que não
-    correspondem a fórmulas reais são ignoradas com um aviso.
+    The reverse conversion works for species whose symbols are valid
+    chemical formulas. Abstract Catalyst species (e.g. `SE`) that do not
+    correspond to real formulas are skipped with a warning.
 
-## Limitações
+## Limitations
 
-- A conversão assume reações **direcionadas** (esquerda → direita) e
-  **elementares**, com uma única constante de velocidade `k`.
-- Nomes de compostos que não são identificadores válidos do Catalyst
-  (ex.: `Γ`, `⬡`) ou compostos carregados não podem ser convertidos.
+- The conversion assumes **directed** (left → right) and **elementary**
+  reactions, with a single rate constant `k`.
+- Compound names that are not valid Catalyst identifiers (e.g. `Γ`, `⬡`)
+  or charged compounds cannot be converted.

@@ -383,7 +383,7 @@ julia> latex(balance(ce"CH4 + O2 = CO2 + H2O"))
 ## Visualization
 
 !!! note
-    A visualização requer `Plots.jl` carregado *antes* de
+    Visualization requires `Plots.jl` to be loaded *before*
     `ChemicalEquations`:
     ```julia
     using Plots
@@ -405,7 +405,7 @@ using Plots
 using ChemicalEquations
 
 eq = balance(ce"CH4 + O2 = CO2 + H2O")
-plot_stoichiometry(eq; title="Combustão de Metano")
+plot_stoichiometry(eq; title="Methane Combustion")
 ```
 
 ---
@@ -519,7 +519,7 @@ julia> arrhenius(2.0e12, 50000.0, 298.15)
 ## Thermochemistry
 
 !!! note
-    A termodinâmica requer `Glenn.jl` carregado *antes* de
+    Thermochemistry requires `Glenn.jl` to be loaded *before*
     `ChemicalEquations`:
     ```julia
     using Glenn
@@ -594,7 +594,7 @@ julia> van_t_hoff(1.0e-3, 5.0e-3, 300.0, 350.0)   # ≈ 28101.38 J/mol
 ## Catalyst Integration
 
 !!! note
-    A integração requer `Catalyst.jl` carregado *antes* de
+    Catalyst integration requires `Catalyst.jl` to be loaded *before*
     `ChemicalEquations`:
     ```julia
     using Catalyst
