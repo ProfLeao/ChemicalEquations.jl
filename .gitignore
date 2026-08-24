@@ -3,3 +3,9 @@
 *.jl.mem
 /docs/build/
 Manifest.toml
+
+# Generated plot outputs
+*.png
+*.pdf
+*.svg
+.DS_Store
